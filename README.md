@@ -1,4 +1,4 @@
-# Проект XYZ
+# Проект Laba9
 
 Цей проект є прикладом інтеграції різних інструментів для розробки Java-додатків. У цьому README описано кроки для налаштування та використання автоматизованого збірника, логування, процесу встановлення Project Lombok, інтеграції бібліотеки Jackson для роботи з JSON, а також документації з внесених змін.
 
@@ -18,7 +18,55 @@ Ant
 
 xml
 Copy code
-// Додайте сюди конфігурацію Ant
+```
+<dependencies>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Log4j -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
 Maven
 Якщо ви вибрали Maven, додайте файл pom.xml з налаштуванням.
 
