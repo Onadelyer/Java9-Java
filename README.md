@@ -5,7 +5,7 @@
 
 ## Вимоги:
     1. Java (версія 8 або новіша)
-    2. Apache Ant, Apache Maven, або Gradle (виберіть одну систему збірки)
+    2. Apache Maven
     3. Project Lombok
     4. Apache Log4j
     5. Jackson
