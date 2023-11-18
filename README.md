@@ -1,23 +1,16 @@
+
 # Проект Laba9
 
 Цей проект є прикладом інтеграції різних інструментів для розробки Java-додатків. У цьому README описано кроки для налаштування та використання автоматизованого збірника, логування, процесу встановлення Project Lombok, інтеграції бібліотеки Jackson для роботи з JSON, а також документації з внесених змін.
 
-Вимоги
-Перед початком роботи переконайтеся, що у вас встановлені наступні інструменти:
+## Вимоги:
+    1. Java (версія 8 або новіша)
+    2. Apache Ant, Apache Maven, або Gradle (виберіть одну систему збірки)
+    3. Project Lombok
+    4. Apache Log4j
+    5. Jackson
 
-Java (версія 8 або новіша)
-Apache Ant, Apache Maven, або Gradle (виберіть одну систему збірки)
-Project Lombok
-Apache Log4j
-Jackson
-Налаштування Збірки (Ant/Maven/Gradle)
-Виберіть одну з систем збірки (Ant, Maven, або Gradle) та виконайте наступні кроки для налаштування:
-
-Ant
-Для використання Ant у вашому проекті, додайте файл build.xml та сконфігуруйте його для компіляції, тестування та пакетування.
-
-xml
-Copy code
+#### Приклад конфігурації Maven в проекті
 ```xml
 <dependencies>
         <!-- Lombok -->
@@ -67,38 +60,75 @@ Copy code
         </plugins>
     </build>
 ```
-Maven
-Якщо ви вибрали Maven, додайте файл pom.xml з налаштуванням.
 
-xml
-Copy code
-// Додайте сюди конфігурацію Maven
-Gradle
-Для Gradle, використайте файл build.gradle для вказання налаштувань.
+#### Інтеграція Project Lombok
 
-gradle
-Copy code
-// Додайте сюди конфігурацію Gradle
-Інтеграція Project Lombok
-Project Lombok допомагає спростити створення класів. Додайте залежність та налаштуйте ваш проект для використання анотацій Lombok.
+Project Lombok допомагає спростити створення класів. Приклад використання в проекті: 
 
-java
-Copy code
-// Додайте сюди приклад використання Lombok
-Логування за допомогою Log4j
-Integrate Log4j у ваш проект та налаштуйте його для виводу логів у консоль та файл.
+```java
+@Getter
+@Setter
+@ToString
+class PassengerTripHistory implements Serializable {
+    private int id;
+    private String name;
+    private String date;
+    private List<String> attractions;
+}
+```
 
-xml
-Copy code
-// Додайте сюди конфігурацію Log4j
-Інтеграція Jackson для JSON
-Додайте Jackson до вашого проекту та використайте його для серіалізації та десеріалізації об'єктів Java у JSON.
+#### Логування за допомогою **Log4j**
 
-java
-Copy code
-// Додайте сюди приклад використання Jackson
-Зміни до Проекту
-Додайте інструкції щодо збірки, запуску та тестування вашого проекту. Також вкажіть, як використовувати нові бібліотеки та інструменти.
+```java
+public DbService() {
+        Properties properties = new Properties();
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            // Завантаження конфігураційних параметрів з файлу
+            properties.load(input);
 
-Заключні слова
-Цей README надає загальні кроки для налаштування інструментів у вашому проекті. Деталізуйте кожен розділ згідно вашим потребам та додайте додаткову інформацію при необхідності.
+            // Отримання значення за ключем
+            JDBC_URL = properties.getProperty("db.url");
+            USERNAME = properties.getProperty("db.username");
+            PASSWORD = properties.getProperty("db.password");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            // Initialize the JDBC driver
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load MySQL JDBC driver.");
+        }
+
+        logger.log(java.util.logging.Level.INFO, "Successfully connected to the database.");
+    }
+```
+
+#### Інтеграція Jackson для JSON
+
+Бібліотека для сереалізації об'єктів використовуючи **JSON**
+
+```java
+while (tripResultSet.next()) {
+    int trip_id = tripResultSet.getInt("id");
+    String trip_name = tripResultSet.getString("name");
+    String trip_date = tripResultSet.getString("date");
+    String jsonAttractions = tripResultSet.getString("attractions");
+
+    List<String> attractions = new ArrayList<>();
+
+    if(!Objects.equals(jsonAttractions, "")){
+        ObjectMapper objectMapper = new ObjectMapper();
+        attractions = objectMapper.readValue(jsonAttractions, List.class);
+                        }
+
+    PassengerTripHistory newTrip = new PassengerTripHistory(trip_id, trip_name, trip_date);
+
+    newTrip.setAttractions(attractions);
+
+    tripHistory.add(newTrip);
+}
+```
