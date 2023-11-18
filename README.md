@@ -18,7 +18,7 @@ Ant
 
 xml
 Copy code
-```
+```xml
 <dependencies>
         <!-- Lombok -->
         <dependency>
